@@ -3,7 +3,8 @@ import { Link, Route } from 'dva/router'
 import { Layout, Menu, Icon } from 'antd';
 import Home from './Home';
 import { isAbsolute } from 'path';
-import List from '../routes/List'
+import List from '../routes/List';
+import RegistrationForm from '../routes/Add';
 
 const { Header, Content, Footer } = Layout;
 
@@ -46,7 +47,10 @@ class BasicLayout extends React.Component {
               </Link>
             </Menu.Item>
             <Menu.Item key="Add">
-              <Icon type="form" />增加学籍
+              <Link to="/Layout/Add">
+                <Icon type="form" />
+                增加学籍
+              </Link>
             </Menu.Item>
             <Menu.Item key="Statistics">
               <Icon type="pie-chart" />学籍统计
@@ -56,9 +60,10 @@ class BasicLayout extends React.Component {
         <Content style={{minHeight: 720, margin: 20}}>
           <Route path="/Layout/Home" component={Home} />
           <Route path="/Layout/List" component={List} />
+          <Route path="/Layout/Add" component={RegistrationForm} />
         </Content>
         <Footer style={{textAlign: "center"}}>
-          student-status ©2018 Created by Android
+          student-status ©2018 Created by CuteAndroid
         </Footer>
       </Layout>
   )

@@ -1,33 +1,40 @@
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, Cascader, Select, Button, } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
 
-const residences = [{
-  value: 'zhejiang',
-  label: 'Zhejiang',
+const major = [{ 
+  value: 'computer',
+  label: '计算机系',
   children: [{
-    value: 'hangzhou',
-    label: 'Hangzhou',
+    value: 'science',
+    label: '计算机科学与技术',
     children: [{
-      value: 'xihu',
-      label: 'West Lake',
-    }],
-  }],
+      value: 'sci-class1',
+      label: '1401',
+    }, {
+      value: 'sci-class2',
+      label: '1402',
+    }]
+  }, {
+      value: 'software',
+      label: '软件工程',
+      children: [{
+        value: 'soft-class1',
+        label: '1501',
+      }, {
+        value: 'soft-class2',
+        label: '1502',
+      }]
+  }]
 }, {
-  value: 'jiangsu',
-  label: 'Jiangsu',
-  children: [{
-    value: 'nanjing',
-    label: 'Nanjing',
-    children: [{
-      value: 'zhonghuamen',
-      label: 'Zhong Hua Men',
-    }],
-  }],
+  value: 'power',
+  label: '电力系',
+}, {
+  value: 'automatic',
+  label: '自动化系',
 }];
 
 class RegistrationForm extends React.Component {
@@ -45,19 +52,7 @@ class RegistrationForm extends React.Component {
     });
   }
 
-  handleConfirmBlur = (e) => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  }
 
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!');
-    } else {
-      callback();
-    }
-  }
 
   validateToNextPassword = (rule, value, callback) => {
     const form = this.props.form;
@@ -67,19 +62,8 @@ class RegistrationForm extends React.Component {
     callback();
   }
 
-  handleWebsiteChange = (value) => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    this.setState({ autoCompleteResult });
-  }
-
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { autoCompleteResult } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -88,7 +72,7 @@ class RegistrationForm extends React.Component {
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 8 },
       },
     };
     const tailFormItemLayout = {
@@ -103,30 +87,16 @@ class RegistrationForm extends React.Component {
         },
       },
     };
-    const prefixSelector = getFieldDecorator('prefix', {
-      initialValue: '86',
-    })(
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    );
-
-    const websiteOptions = autoCompleteResult.map(website => (
-      <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-    ));
 
     return (
       <Form onSubmit={this.handleSubmit}>
         <FormItem
-          //{...formItemLayout}
-          label="E-mail"
+          {...formItemLayout}
+          label="学号"
         >
-          {getFieldDecorator('email', {
+          {getFieldDecorator('id', {
             rules: [{
-              type: 'email', message: 'The input is not valid E-mail!',
-            }, {
-              required: true, message: 'Please input your E-mail!',
+              required: true, message: '请输入学号!',
             }],
           })(
             <Input />
@@ -134,112 +104,77 @@ class RegistrationForm extends React.Component {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Password"
+          label="姓名"
         >
-          {getFieldDecorator('password', {
+          {getFieldDecorator('name', {
             rules: [{
-              required: true, message: 'Please input your password!',
-            }, {
-              validator: this.validateToNextPassword,
+              required: true, message: '请输入姓名!',
             }],
-          })(
-            <Input type="password" />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Confirm Password"
-        >
-          {getFieldDecorator('confirm', {
-            rules: [{
-              required: true, message: 'Please confirm your password!',
-            }, {
-              validator: this.compareToFirstPassword,
-            }],
-          })(
-            <Input type="password" onBlur={this.handleConfirmBlur} />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={(
-            <span>
-              Nickname&nbsp;
-              <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-          )}
-        >
-          {getFieldDecorator('nickname', {
-            rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
           })(
             <Input />
           )}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Habitual Residence"
+          label="性别"
         >
-          {getFieldDecorator('residence', {
-            rules: [{ type: 'array', required: true, message: 'Please select your habitual residence!' }],
+          {getFieldDecorator('sex', {
+            rules: [{
+              required: true, message: '请选择性别!',
+            }],
           })(
-            <Cascader options={residences} />
+            <Select style={{ width: '20%'}} >
+              <Option value="woman">女</Option>
+              <Option value="man">男</Option>
+            </Select>
           )}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Phone Number"
+          label="年龄"
         >
-          {getFieldDecorator('phone', {
-            rules: [{ required: true, message: 'Please input your phone number!' }],
+          {getFieldDecorator('age', {
+            rules: [{
+              required: true, message: '请选择年龄!',
+            }],
           })(
-            <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+            <Select style={{ width: '20%'}} >
+              <Option value="21">21</Option>
+              <Option value="22">22</Option>
+              <Option value="23">23</Option>
+              <Option value="24">24</Option>
+            </Select>
           )}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Website"
+          label="籍贯"
         >
-          {getFieldDecorator('website', {
-            rules: [{ required: true, message: 'Please input website!' }],
+          {getFieldDecorator('address', {
+            rules: [{
+              required: true, message: '请选择籍贯!',
+            }],
           })(
-            <AutoComplete
-              dataSource={websiteOptions}
-              onChange={this.handleWebsiteChange}
-              placeholder="website"
-            >
-              <Input />
-            </AutoComplete>
+            <Select style={{ width: '50%'}} >
+              <Option value="beijing">北京市</Option>
+              <Option value="henan">河南省</Option>
+              <Option value="hebei">河北省</Option>
+              <Option value="tianjin">天津市</Option>
+            </Select>
           )}
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Captcha"
-          extra="We must make sure that your are a human."
+          label="系别专业班级"
         >
-          <Row gutter={8}>
-            <Col span={12}>
-              {getFieldDecorator('captcha', {
-                rules: [{ required: true, message: 'Please input the captcha you got!' }],
-              })(
-                <Input />
-              )}
-            </Col>
-            <Col span={12}>
-              <Button>Get captcha</Button>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem {...tailFormItemLayout}>
-          {getFieldDecorator('agreement', {
-            valuePropName: 'checked',
+          {getFieldDecorator('department', {
+            rules: [{  required: true, message: '请选择系别专业班级!' }],
           })(
-            <Checkbox>I have read the <a href="">agreement</a></Checkbox>
+            <Cascader options={major} />
           )}
         </FormItem>
         <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">Register</Button>
+          <Button type="primary" htmlType="submit">提交</Button>
         </FormItem>
       </Form>
     );
