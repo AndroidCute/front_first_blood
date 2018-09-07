@@ -34,7 +34,7 @@ function checkStatus(response) {
 };
 
 export var jwt = {
-  Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwMCwiaWF0IjoxNTM2MzQ4MTMxfQ.EcNIZCIxvPSn8FQnVpWY9x86pncegG-XKSCbANhWpaI'
+  Authorization: 'Bearer '
 };
 
 /**
