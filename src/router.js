@@ -11,10 +11,10 @@ function RouterConfig({ history }) {
   return (
     <Router history={history}>
       <Switch>
+        <Route path="/Login" component={Login} />
         <Route path="/" exact component={IndexPage} />
         <Route path="/products" component={Products} />
         <Route path="/Layout" component={BasicLayout} />
-        <Route path="/Login" component={Login} />
         <Route path="/Add" component={RegistrationForm} />
       </Switch>
     </Router>
