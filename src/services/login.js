@@ -5,7 +5,19 @@ export async function ReqLogin(params) {
     method: 'POST',
     body: {
       ...params,
-      method: 'post',
     },
   });
+}
+
+export async function AddStudent(params) {
+  return request('/student/create', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
+export async function StudentList() {
+  return request('/student/getAll');
 }

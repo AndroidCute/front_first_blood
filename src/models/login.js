@@ -3,6 +3,8 @@
  */
 import { routerRedux } from 'dva/router'
 import { ReqLogin } from '../services/login'
+import { jwt } from '../utils/request'
+import { notification } from 'antd';
 
 export default {
 
@@ -20,24 +22,16 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(ReqLogin, payload);
-      if (response.status === 0 ) {
-        const { data } = response;
-        data.status = 'ok';
-        data.currentAuthority = data.ojrole;
-        data.avatar = '';
-        data.userid = data.id;
-        data.notifyCount = 0;
-        yield put({
-          type: 'changeLoginStatus',
-          payload: data,
-        });
+      console.log("Resp:", response)
+      if (response.status === 200 ) {
+        const { msg } = response;
+        jwt.Authorization = jwt.Authorization + msg;
         // Login successfully
-        yield put(routerRedux.push('/'));
+        yield put(routerRedux.push('/Layout/List'));
       } else {
-        const data = {};
-        data.status = 'error';
-        data.type = 'account';
-        data.message = response.message;
+        notification.error({
+          message: `登录失败，${response.msg}`,
+        });
       }
     },
   },

@@ -48,6 +48,16 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        this.props.dispatch({type: "student/add", payload: {
+          card: values.id,
+          name: values.name,
+          sex: values.sex,
+          age: values.age,
+          native: values.address,
+          science: values.department[0],
+          specialty: values.department[1] ? values.department[1]:'',
+          class: values.department[2] ? values.department[2]:'',
+        }})
       }
     });
   }
@@ -124,8 +134,8 @@ class RegistrationForm extends React.Component {
             }],
           })(
             <Select style={{ width: '20%'}} >
-              <Option value="woman">女</Option>
-              <Option value="man">男</Option>
+              <Option value="1">女</Option>
+              <Option value="2">男</Option>
             </Select>
           )}
         </FormItem>
@@ -181,4 +191,4 @@ class RegistrationForm extends React.Component {
   }
 }
 
-export default connect()(Form.create()(RegistrationForm));
+export default connect((student)=>(student))(Form.create()(RegistrationForm));

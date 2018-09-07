@@ -19,7 +19,7 @@ const codeMessage = {
   504: '网关超时。',
 };
 function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300 || response.status === 400) {
+  if (response.status === 200) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -34,7 +34,7 @@ function checkStatus(response) {
 };
 
 export var jwt = {
-  'Authorization': 'Bearer '
+  Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAwMCwiaWF0IjoxNTM2MzQ4MTMxfQ.EcNIZCIxvPSn8FQnVpWY9x86pncegG-XKSCbANhWpaI'
 };
 
 /**
@@ -47,7 +47,7 @@ export var jwt = {
 export default function request(url, options) {
   url = 'http://127.0.0.1:7001' + url
   const defaultOptions = {
-    credentials: 'include',
+    headers: jwt
   };
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {

@@ -6,10 +6,6 @@ import styles from './Login.css';
 const FormItem = Form.Item
 
 class Login extends React.Component {
-  componentDidMount() {
-    this.props.dispatch({type: "login/save", payload: {username: "An"}})
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
