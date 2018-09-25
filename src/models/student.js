@@ -1,7 +1,7 @@
 /**
  * Created by cuteandroid on 2018/8/21.
  */
-import { AddStudent } from '../services/login'
+import { AddStudent, StudentList } from '../services/login'
 import { notification } from 'antd';
 
 export default {
@@ -33,15 +33,13 @@ export default {
       }
     },
     *getList({ payload }, { call, put }) {
-      const response = yield call(AddStudent, payload);
+      const response = yield call(StudentList);
       console.log("Resp:", response)
       if (response.status === 200 ) {
-        notification.success({
-          message: `添加成功`,
-        });
+        yield put({type: "saveList", payload: response.msg})
       } else {
         notification.error({
-          message: `添加失败，${response.msg}`,
+          message: `获取学籍列表失败，${response.msg}`,
         });
       }
     },
@@ -50,6 +48,11 @@ export default {
   reducers: {
     save(state, action) {
       let newState = { ...state, ...action.payload }
+      console.log(newState)
+      return newState;
+    },
+    saveList(state, action) {
+      let newState = { ...state, list: action.payload }
       console.log(newState)
       return newState;
     },
