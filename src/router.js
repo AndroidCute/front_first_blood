@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, Switch } from 'dva/router';
+import { Router, Redirect, Route, Switch } from 'dva/router';
 // import IndexPage from './routes/IndexPage';
 // import Products from './routes/Products';
 import BasicLayout from './Layout/BasicLayout';
@@ -16,6 +16,7 @@ function RouterConfig({ history }) {
         {/* <Route path="/products" component={Products} /> */}
         <Route path="/Layout" component={BasicLayout} />
         {/* <Route path="/Add" component={RegistrationForm} /> */}
+        <Redirect from="*" to="/Login" />
       </Switch>
     </Router>
   );

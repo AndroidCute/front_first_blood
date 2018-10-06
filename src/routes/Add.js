@@ -1,4 +1,4 @@
-import { Form, Input, Cascader, Select, Button, } from 'antd';
+import { Form, Input, Cascader, Select, Button, Upload, Icon, message, Col } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 
@@ -41,6 +41,8 @@ class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
+    loading: false,
+    imageUrl: ""
   };
 
   handleSubmit = (e) => {
@@ -49,20 +51,49 @@ class RegistrationForm extends React.Component {
       if (!err) {
         console.log('Received values of form: ', values);
         this.props.dispatch({type: "student/add", payload: {
-          card: values.id,
+          card: values.card,
           name: values.name,
           sex: values.sex,
           age: values.age,
           native: values.address,
+          avatar: this.state.imageUrl,
           science: values.department[0],
           specialty: values.department[1] ? values.department[1]:'',
           class: values.department[2] ? values.department[2]:'',
         }})
       }
     });
+    this.setState({avatar: ''})
   }
 
+  handleChange = (info) => {
+      if (info.file.status === 'uploading') {
+          this.setState({loading: true});
+          return;
+      }
+      if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          this.getBase64(info.file.originFileObj, imageUrl => this.setState({imageUrl, loading: false}));
+      }
+  }
 
+  getBase64 = (img, callback) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => callback(reader.result));
+      reader.readAsDataURL(img);
+  }
+
+  beforeUpload = (file) => {
+      const isJPG = file.type === 'image/jpeg';
+      if (!isJPG) {
+          message.error('You can only upload JPG file!');
+      }
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+          message.error('Image must smaller than 2MB!');
+      }
+      return isJPG && isLt2M;
+  }
 
   validateToNextPassword = (rule, value, callback) => {
     const form = this.props.form;
@@ -98,13 +129,40 @@ class RegistrationForm extends React.Component {
       },
     };
 
+    const uploadButton = (
+      <div>
+          <Icon
+              type={this.state.loading
+              ? 'loading'
+              : 'plus'}/>
+          <div className="ant-upload-text">Upload</div>
+      </div>
+    );
+
     return (
+      <div>
+        <Col offset={10}>
+        <Upload
+          name="avatar"
+          listType="picture-card"
+          className="avatar-uploader"
+          showUploadList={false}
+          action="http://127.0.0.1:7001/upload/avator"
+          beforeUpload={this.beforeUpload}
+          onChange={this.handleChange}>
+
+          {this.state.imageUrl
+              ? <img src={this.state.imageUrl} style={{width:138, height:178}} alt=""/>
+              : uploadButton}
+
+          </Upload>
+        </Col>
       <Form onSubmit={this.handleSubmit}>
         <FormItem
           {...formItemLayout}
           label="学号"
         >
-          {getFieldDecorator('id', {
+          {getFieldDecorator('card', {
             rules: [{
               required: true, message: '请输入学号!',
             }],
@@ -187,6 +245,7 @@ class RegistrationForm extends React.Component {
           <Button type="primary" htmlType="submit">提交</Button>
         </FormItem>
       </Form>
+    </div>
     );
   }
 }

@@ -27,7 +27,7 @@ export default {
         const { msg } = response;
         jwt.Authorization = jwt.Authorization + msg;
         // Login successfully
-        yield put(routerRedux.push('/Layout/List'));
+        yield put(routerRedux.push('/Layout/Home'));
       } else {
         notification.error({
           message: `登录失败，${response.msg}`,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Route } from 'dva/router'
+import { Link, Route, Redirect, Switch } from 'dva/router'
 import { Layout, Menu, Icon } from 'antd';
 import Home from './Home';
 import { isAbsolute } from 'path';
@@ -31,9 +31,6 @@ class BasicLayout extends React.Component {
             defaultSelectedKeys={['Home']}
             style={{ lineHeight: '64px' }}
           >
-            <Menu.Item key="Logo" disabled>
-              <Icon type="appstore" />
-            </Menu.Item>
             <Menu.Item key="Home">
               <Link to="/Layout/Home">
                 <Icon type="home" />
@@ -58,9 +55,12 @@ class BasicLayout extends React.Component {
           </Menu>
         </Header>
         <Content style={{minHeight: 720, margin: 20}}>
-          <Route path="/Layout/Home" component={Home} />
-          <Route path="/Layout/List" component={List} />
-          <Route path="/Layout/Add" component={RegistrationForm} />
+          <Switch>
+            <Route exact path="/Layout/Home" component={Home} />
+            <Route exact path="/Layout/List" component={List} />
+            <Route exact path="/Layout/Add" component={RegistrationForm} />
+            <Redirect from="*" to='/Layout/Home' />
+          </Switch>
         </Content>
         <Footer style={{textAlign: "center"}}>
           student-status ©2018 Created by CuteAndroid

@@ -1,7 +1,8 @@
 /**
  * Created by cuteandroid on 2018/8/21.
  */
-import { AddStudent, StudentList } from '../services/login'
+import { routerRedux } from 'dva/router'
+import { AddStudent, StudentList, ModifyStudent, DeleteStudent, SearchStudent } from '../services/login'
 import { notification } from 'antd';
 
 export default {
@@ -26,6 +27,7 @@ export default {
         notification.success({
           message: `添加成功`,
         });
+        yield put(routerRedux.push('/Layout/List'));
       } else {
         notification.error({
           message: `添加失败，${response.msg}`,
@@ -39,9 +41,45 @@ export default {
         yield put({type: "saveList", payload: response.msg})
       } else {
         notification.error({
-          message: `获取学籍列表失败，${response.msg}`,
+          message: `获取失败，${response.msg}`,
         });
       }
+    },
+    *getSearchList({ payload }, { call, put }) {
+      const response = yield call(SearchStudent, payload);
+      console.log("Resp:", response)
+      if (response.status === 200 ) {
+        yield put({type: "saveList", payload: response.msg})
+      } else {
+        notification.error({
+          message: `搜索失败，${response.msg}`,
+        });
+      }
+    },
+    *modify({ payload }, { call, put }) {
+      const response = yield call(ModifyStudent, payload);
+      console.log("Resp:", response)
+      if (response.status === 200 ) {
+        notification.success({
+          message: `修改成功`,
+        });
+      } else {
+        notification.error({
+          message: `修改失败，${response.msg}`,
+        });
+      };
+      yield put({type: "getList"})
+    },
+    *delete({ payload }, { call, put }) {
+      const response = yield call(DeleteStudent, payload);
+      console.log("Resp:", response)
+      if (response.status === 200 ) {
+      } else {
+        notification.error({
+          message: `删除失败，${response.msg}`,
+        });
+      };
+      yield put({type: "getList"})
     },
   },
 
