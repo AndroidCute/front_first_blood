@@ -5,6 +5,8 @@ import Home from './Home';
 import { isAbsolute } from 'path';
 import List from '../routes/List';
 import RegistrationForm from '../routes/Add';
+import PieChart from '../routes/Statistics';
+
 
 const { Header, Content, Footer } = Layout;
 
@@ -50,7 +52,10 @@ class BasicLayout extends React.Component {
               </Link>
             </Menu.Item>
             <Menu.Item key="Statistics">
-              <Icon type="pie-chart" />学籍统计
+              <Link to="/Layout/Statistics">
+                <Icon type="pie-chart" />
+                学籍统计
+              </Link>  
             </Menu.Item>
           </Menu>
         </Header>
@@ -59,6 +64,7 @@ class BasicLayout extends React.Component {
             <Route exact path="/Layout/Home" component={Home} />
             <Route exact path="/Layout/List" component={List} />
             <Route exact path="/Layout/Add" component={RegistrationForm} />
+            <Route exact path="/Layout/Statistics" component={PieChart} />
             <Redirect from="*" to='/Layout/Home' />
           </Switch>
         </Content>

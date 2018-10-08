@@ -48,3 +48,7 @@ export async function DeleteStudent(params) {
     },
   });
 }
+
+export async function StatisticsStudent() {
+  return request('/student/pieAgeCount');
+}

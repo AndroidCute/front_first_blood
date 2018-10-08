@@ -2,7 +2,7 @@
  * Created by cuteandroid on 2018/8/21.
  */
 import { routerRedux } from 'dva/router'
-import { AddStudent, StudentList, ModifyStudent, DeleteStudent, SearchStudent } from '../services/login'
+import { AddStudent, StudentList, ModifyStudent, DeleteStudent, SearchStudent, StatisticsStudent } from '../services/login'
 import { notification } from 'antd';
 
 export default {
@@ -81,6 +81,17 @@ export default {
       };
       yield put({type: "getList"})
     },
+    *piecount({ call, put }) {
+      const response = yield call(StatisticsStudent);
+      console.log("Resp:", response)
+      if (response.status === 200 ) {
+        yield put({type: "savePiecount", payload: response.msg})
+      } else {
+        notification.error({
+          message: `统计失败， ${response.msg}`,
+        });
+      };
+    },
   },
 
   reducers: {
@@ -91,6 +102,11 @@ export default {
     },
     saveList(state, action) {
       let newState = { ...state, list: action.payload }
+      console.log(newState)
+      return newState;
+    },
+    savePiecount(state, action) {
+      let newState = { ...state, piecount: action.payload }
       console.log(newState)
       return newState;
     },
