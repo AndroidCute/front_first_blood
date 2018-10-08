@@ -81,7 +81,7 @@ export default {
       };
       yield put({type: "getList"})
     },
-    *piecount({ call, put }) {
+    *piecount({ payload }, { call, put }) {
       const response = yield call(StatisticsStudent);
       console.log("Resp:", response)
       if (response.status === 200 ) {

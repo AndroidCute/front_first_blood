@@ -339,7 +339,7 @@ class List extends React.Component {
         }})
       }
     });
-    this.setState({visible: false});
+    this.setState({visible: false, avatat: ''});
   }
 
   handleSearch = (e) => {

@@ -56,7 +56,7 @@ class RegistrationForm extends React.Component {
           sex: values.sex,
           age: values.age,
           native: values.address,
-          avatar: this.state.imageUrl,
+          avatar: this.state.avatar,
           science: values.department[0],
           specialty: values.department[1] ? values.department[1]:'',
           class: values.department[2] ? values.department[2]:'',
@@ -73,7 +73,9 @@ class RegistrationForm extends React.Component {
       }
       if (info.file.status === 'done') {
           // Get this url from response in real world.
+          this.setState({avatar: info.file.response.msg.url})
           this.getBase64(info.file.originFileObj, imageUrl => this.setState({imageUrl, loading: false}));
+          console.log("avatar:", this.state.avatar)
       }
   }
 
