@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { VictoryPie } from 'victory';
+import { VictoryPie, VictoryLabel } from 'victory';
 
 
 class PieChart extends React.Component {
@@ -19,8 +19,12 @@ class PieChart extends React.Component {
         <VictoryPie 
           data = {piecount}
           origin = {{ x : 100, y : 70 }}
-          padding = {170}
+          padding = {{ top: 20, bottom: 60, left: 170, right: 150 }}
+          height={400}
           colorScale = {["tomato", "orange", "gold", "cyan" ]}
+          labels = {(data) => data.x}
+          style = { {labels: { fontSize: 7 } } }
+          //labelComponent={<VictoryLabel angle={0}/>}
         />
       </div>
     );

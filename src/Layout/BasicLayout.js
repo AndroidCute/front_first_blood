@@ -6,9 +6,12 @@ import { isAbsolute } from 'path';
 import List from '../routes/List';
 import RegistrationForm from '../routes/Add';
 import PieChart from '../routes/Statistics';
+import BarChart from '../routes/VictoryBar';
 
 
 const { Header, Content, Footer } = Layout;
+const SubMenu = Menu.SubMenu;
+const MenuItemGroup = Menu.ItemGroup;
 
 class BasicLayout extends React.Component {
   // state = {
@@ -51,24 +54,39 @@ class BasicLayout extends React.Component {
                 增加学籍
               </Link>
             </Menu.Item>
-            <Menu.Item key="Statistics">
-              <Link to="/Layout/Statistics">
-                <Icon type="pie-chart" />
-                学籍统计
-              </Link>  
-            </Menu.Item>
+            <SubMenu title={<span><Icon type="pie-chart" />学籍统计</span>}>
+              <MenuItemGroup>
+                <Menu.Item key="setting:1">
+                  <Link to="/Layout/Statistics">
+                    年龄统计饼图
+                  </Link> 
+                </Menu.Item>
+                <Menu.Item key="setting:2">
+                  <Link to="/Layout/Bar">
+                    柱状图
+                  </Link> 
+                </Menu.Item>
+                <Menu.Item key="setting:3">
+                  年级人数折线图
+                </Menu.Item>
+                {/* <Menu.Item key="setting:4">
+                  Option 4
+                </Menu.Item> */}
+              </MenuItemGroup>
+            </SubMenu>
           </Menu>
         </Header>
-        <Content style={{minHeight: 720, margin: 20}}>
+        <Content style={{minHeight: 600, margin: 20}}>
           <Switch>
             <Route exact path="/Layout/Home" component={Home} />
             <Route exact path="/Layout/List" component={List} />
             <Route exact path="/Layout/Add" component={RegistrationForm} />
             <Route exact path="/Layout/Statistics" component={PieChart} />
+            <Route exact path="/Layout/Bar" component={BarChart} />
             <Redirect from="*" to='/Layout/Home' />
           </Switch>
         </Content>
-        <Footer style={{textAlign: "center"}}>
+        <Footer style={{textAlign: "center", position: isAbsolute }}>
           student-status ©2018 Created by CuteAndroid
         </Footer>
       </Layout>
