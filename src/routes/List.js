@@ -96,6 +96,7 @@ class List extends React.Component {
       sex1: 0,
       age1: 0,
       native1: '',
+      currentIndex: 0,
       department1: [],
     }
     this.columns = [
@@ -235,10 +236,10 @@ class List extends React.Component {
         title: '编辑',
         align: 'center',
         width: '10%',
-        render: (text, record) => {
+        render: (text, record, index) => {
           return (
             <div>
-              <a onClick={()=>{this.handleModify(record)}} >编辑</a>
+              <a onClick={()=>{this.handleModify(record, index)}} >编辑</a>
             </div>
           );
         },
@@ -301,13 +302,13 @@ class List extends React.Component {
     console.log(e);
   }
 
-  handleModify = (record) => {
+  handleModify = (record, index) => {
     let department = []
     department.push(record.science);
     department.push(record.specialty);
     department.push(record.class);
     record.department = department
-    this.setState({...record, imageUrl: record.avatar, visible: true})
+    this.setState({...record, imageUrl: record.avatar, visible: true, currentIndex: index})
     console.log("NaliChuWenTiLe...", this.state);
   }
 
@@ -584,6 +585,23 @@ class List extends React.Component {
             )}
           </FormItem>
         </Form>
+        <Button onClick={()=>{
+          let index = this.state.currentIndex-1
+          if (index < 0) {
+            index = 0
+          }
+          let record = list[index]
+          this.handleModify(record, index)
+          }}>上一条</Button>
+        <Button onClick={()=>{
+          let index = this.state.currentIndex+1
+          let len = list.length
+          if (index > len-1) {
+            index = len - 1
+          }
+          let record = list[index]
+          this.handleModify(record, index)
+          }}>下一条</Button>
         </Modal>
         <Table
           bordered
