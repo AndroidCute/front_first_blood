@@ -1,10 +1,11 @@
-import { Select, Table, Input, Button, Row, Col, Cascader } from 'antd';
-import { Modal, Form, Popconfirm, message, Icon, Upload } from 'antd';
+import { Select, Table, Input, Button, Row, Col, Cascader, } from 'antd';
+import { Modal, Form, Popconfirm, message, Icon, Upload, AutoComplete } from 'antd';
 import { connect } from 'dva';
 import React from 'react';
 import style from './List.css';
 
 const Option = Select.Option;
+const ButtonGroup = Button.Group;
 const options = [{ 
   value: 'computer',
   label: '计算机系',
@@ -98,6 +99,7 @@ class List extends React.Component {
       native1: '',
       currentIndex: 0,
       department1: [],
+      currentindex: 0,
     }
     this.columns = [
       {
@@ -296,20 +298,15 @@ class List extends React.Component {
     this.setState({id})
     console.log("ID:", id);
   }
-
-  handleClick = (e) => {
-    this.setState({visible: true})
-    console.log(e);
-  }
-
+  
   handleModify = (record, index) => {
     let department = []
     department.push(record.science);
     department.push(record.specialty);
     department.push(record.class);
     record.department = department
-    this.setState({...record, imageUrl: record.avatar, visible: true, currentIndex: index})
-    console.log("NaliChuWenTiLe...", this.state);
+    this.setState({...record, imageUrl: record.avatar, visible: true, currentindex: index})
+    console.log("NaliChuWenTiLe...", this.state, department);
   }
 
   handleChange = (value) => {
@@ -340,7 +337,7 @@ class List extends React.Component {
         }})
       }
     });
-    this.setState({visible: false, avatat: ''});
+    this.setState({visible: Boolean, avatat: ''});
   }
 
   handleSearch = (e) => {
@@ -385,8 +382,8 @@ class List extends React.Component {
     this.props.dispatch({type: "student/getSearchList", payload: {...search}})
   }
 
-  handleChangeSearchName = (e) => {
-    this.setState({name1: e.target.value})
+  handleChangeSearchName = (value ) => {
+    this.setState({name1: value})
   }
 
   handleChangeSearchCard = (e) => {
@@ -414,6 +411,7 @@ class List extends React.Component {
     this.props.dispatch({type: "student/getList"});
   }
 
+
   render() {
     const { list } = this.props.student;
     const { getFieldDecorator } = this.props.form;
@@ -437,7 +435,15 @@ class List extends React.Component {
               : 'plus'}/>
           <div className="ant-upload-text">Upload</div>
       </div>
-    );
+    )
+    
+    const dataSource = [
+      '安顶漂亮',
+      '安大漂亮',
+      '安地方',
+      '安小漂亮',
+    ]
+    ;
 
     return(
       <div className={style.listLayout} >
@@ -446,7 +452,12 @@ class List extends React.Component {
             <Input addonBefore="学号" onChange={this.handleChangeSearchCard}/>
           </Col>
           <Col span={4}>
-            <Input addonBefore="姓名" onChange={this.handleChangeSearchName}/>
+            <AutoComplete
+              dataSource={dataSource}
+              style={{ width: 200 }}
+              onSelect={this.handleChangeSearchName}
+              placeholder="姓名"
+            />
           </Col>
           <Col span={4}>
             <Select placeholder="性别" allowClear style={{ width: 95, marginRight: 20 }} onChange={this.handleChangeSearchSex}>
@@ -493,8 +504,8 @@ class List extends React.Component {
               : uploadButton}
 
           </Upload>
-          </Col>
-          <Form>
+        </Col>
+        <Form>
           <FormItem
             {...formItemLayout}
             label="学号"
@@ -585,23 +596,32 @@ class List extends React.Component {
             )}
           </FormItem>
         </Form>
-        <Button onClick={()=>{
-          let index = this.state.currentIndex-1
-          if (index < 0) {
-            index = 0
-          }
-          let record = list[index]
-          this.handleModify(record, index)
-          }}>上一条</Button>
-        <Button onClick={()=>{
-          let index = this.state.currentIndex+1
-          let len = list.length
-          if (index > len-1) {
-            index = len - 1
-          }
-          let record = list[index]
-          this.handleModify(record, index)
-          }}>下一条</Button>
+        <Col offset={8}>
+          <ButtonGroup>
+            <Button  onClick={() => {
+              let index = this.state.currentindex - 1;
+              if (index < 0)
+              {
+                index = 0;
+              }
+              let record = list[index];
+              this.handleModify(record,index);
+            }}>
+              <Icon type="left" />上一条
+            </Button>
+            <Button  onClick={() => {
+              let index = this.state.currentindex + 1;
+              if (index > list.length-1)
+              {
+                index = list.length-1;
+              }
+              let record = list[index];
+              this.handleModify(record,index);
+            }}>
+              <Icon type="right" />下一条
+            </Button>
+          </ButtonGroup>
+        </Col>
         </Modal>
         <Table
           bordered
