@@ -3,10 +3,11 @@ import { Modal, Form, Popconfirm, message, Icon, Upload, AutoComplete } from 'an
 import { connect } from 'dva';
 import React from 'react';
 import style from './List.css';
+import { isArray } from 'util';
 
 const Option = Select.Option;
 const ButtonGroup = Button.Group;
-const rows = [];
+
 const options = [{ 
   value: 'computer',
   label: '计算机系',
@@ -126,6 +127,7 @@ class List extends React.Component {
       currentIndex: 0,
       department1: [],
       currentindex: 0,
+      rows: [],
     }
     this.columns = [
       {
@@ -438,15 +440,20 @@ class List extends React.Component {
   }
 
   handleAdd = () => {
-    if(rows.length < 3) {
-      rows.push(1);
+    if(this.state.rows.length < 3) {
+      let rows = this.state.rows;
+      rows.push(1)
+      this.setState({rows});
       console.log(rows);
     }
   }
 
   handleReduce = () => {
-    if(rows.length > 0) {
-      rows.pop();
+    if(this.state.rows.length > 0) {
+      let rows = this.state.rows
+      rows.pop()
+      this.setState({rows});
+      // rows.pop();
       console.log(rows);
     }
   }
@@ -455,6 +462,30 @@ class List extends React.Component {
     const { list } = this.props.student;
     const { getFieldDecorator } = this.props.form;
 
+    let rows = this.state.rows.map((_, i) => {
+      return (
+        <Row key={i} type="flex" justify="center" className={style.searchcss}>
+          <Col span={3} style={{ width: 120 }}>
+            <Select defaultValue="and" style={{ width: 75 }}>
+              <Option value="and">并且</Option>
+              <Option value="or">或者</Option>
+            </Select>
+          </Col>
+          <Col span={4} style={{ width: 120 }}>
+            <Select defaultValue="card" style={{ width: 100 }}>
+              <Option value="card">学号</Option>
+              <Option value="name">姓名</Option>
+              <Option value="science">系别</Option>
+            </Select>
+          </Col>
+          <Col span={8} style={{ width: 500 }}>
+            <Input />
+          </Col>
+        </Row>
+      );
+    });
+
+    console.log("ROWS:", rows)
 
     const formItemLayout = {
       labelCol: {
@@ -508,32 +539,7 @@ class List extends React.Component {
           </Col>
         </Row>
         <div>
-          {
-            rows.map(function(i) {
-              return(
-                <div>
-                  <Row type="flex" justify="center">
-                  <Col span={3} style={{ width: 120 }}>
-                    <Select defaultValue="and" style={{ width: 75 }}>
-                      <Option value="and">并且</Option>
-                      <Option value="or">或者</Option>
-                    </Select>
-                  </Col>
-                  <Col span={4} style={{ width: 120 }}>
-                    <Select defaultValue="card" style={{ width: 100 }}>
-                      <Option value="card">学号</Option>
-                      <Option value="name">姓名</Option>
-                      <Option value="science">系别</Option>
-                    </Select>
-                  </Col>
-                  <Col span={8} style={{ width: 500 }}>
-                    <Input />
-                  </Col>
-                </Row>
-                </div>
-              );
-            })
-          }
+          {rows}
         </div>
         {/* <Row gutter={16} className={style.rowcss} >
           <Col span={4}>
