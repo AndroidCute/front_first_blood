@@ -6,6 +6,7 @@ import style from './List.css';
 
 const Option = Select.Option;
 const ButtonGroup = Button.Group;
+const rows = [];
 const options = [{ 
   value: 'computer',
   label: '计算机系',
@@ -87,6 +88,31 @@ const major = [{
 
 const FormItem = Form.Item;
 
+class SearchCom extends React.Component {
+  render() {
+    return(
+      
+        <Row type="flex" justify="center">
+          <Col span={3} style={{ width: 120 }}>
+            <Select defaultValue="and" style={{ width: 75 }}>
+              <Option value="and">并且</Option>
+              <Option value="or">或者</Option>
+            </Select>
+          </Col>
+          <Col span={4} style={{ width: 120 }}>
+            <Select defaultValue="card" style={{ width: 100 }}>
+              <Option value="card">学号</Option>
+              <Option value="name">姓名</Option>
+              <Option value="science">系别</Option>
+            </Select>
+          </Col>
+          <Col span={8} style={{ width: 500 }}>
+            <Input />
+          </Col>
+        </Row>
+    );
+  }
+}
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -411,10 +437,24 @@ class List extends React.Component {
     this.props.dispatch({type: "student/getList"});
   }
 
+  handleAdd = () => {
+    if(rows.length < 3) {
+      rows.push(1);
+      console.log(rows);
+    }
+  }
+
+  handleReduce = () => {
+    if(rows.length > 0) {
+      rows.pop();
+      console.log(rows);
+    }
+  }
 
   render() {
     const { list } = this.props.student;
     const { getFieldDecorator } = this.props.form;
+
 
     const formItemLayout = {
       labelCol: {
@@ -447,7 +487,55 @@ class List extends React.Component {
 
     return(
       <div className={style.listLayout} >
-        <Row gutter={16} className={style.rowcss} >
+        <Row type="flex" justify="center" className={style.searchcss} >
+          <Col span={3} style={{ width: 120 }}>
+            <Button size="small" style={{ marginRight: 10}} onClick={this.handleAdd}>
+              <Icon type="plus-circle" theme="filled" />
+            </Button>
+            <Button size="small" onClick={this.handleReduce}>
+              <Icon type="minus-circle" theme="filled" />
+            </Button>
+          </Col>
+          <Col span={4} style={{ width: 120 }}>
+            <Select defaultValue="card" style={{ width: 100 }}>
+              <Option value="card">学号</Option>
+              <Option value="name">姓名</Option>
+              <Option value="science">系别</Option>
+            </Select>
+          </Col>
+          <Col span={8} style={{ width: 500 }} >
+            <Input />
+          </Col>
+        </Row>
+        <div>
+          {
+            rows.map(function(i) {
+              return(
+                <div>
+                  <Row type="flex" justify="center">
+                  <Col span={3} style={{ width: 120 }}>
+                    <Select defaultValue="and" style={{ width: 75 }}>
+                      <Option value="and">并且</Option>
+                      <Option value="or">或者</Option>
+                    </Select>
+                  </Col>
+                  <Col span={4} style={{ width: 120 }}>
+                    <Select defaultValue="card" style={{ width: 100 }}>
+                      <Option value="card">学号</Option>
+                      <Option value="name">姓名</Option>
+                      <Option value="science">系别</Option>
+                    </Select>
+                  </Col>
+                  <Col span={8} style={{ width: 500 }}>
+                    <Input />
+                  </Col>
+                </Row>
+                </div>
+              );
+            })
+          }
+        </div>
+        {/* <Row gutter={16} className={style.rowcss} >
           <Col span={4}>
             <Input addonBefore="学号" onChange={this.handleChangeSearchCard}/>
           </Col>
@@ -482,7 +570,7 @@ class List extends React.Component {
           <Col span={2}>
             <Button type='primary' shape='circle' icon='search' style={{ align: 'left' }} onClick={this.handleSearch} />
           </Col>
-        </Row>
+        </Row> */}
         <Modal destroyOnClose title="修改学籍信息"
           visible={this.state.visible}
           onOk={this.handleSubmit}
