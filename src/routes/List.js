@@ -128,6 +128,7 @@ class List extends React.Component {
       department1: [],
       currentindex: 0,
       rows: [],
+      search: [],
     }
     this.columns = [
       {
@@ -458,6 +459,45 @@ class List extends React.Component {
     }
   }
 
+  handleAddSearchCondName = (index, name) => {
+    let search = this.state.search;
+    let elem = search[index]
+    if (elem) {
+      elem.name = name;
+    } else {
+      elem = {name};
+    }
+    if (index == 0) {
+      elem.relation = "and"
+    }
+    search[index] = elem;
+    this.setState({search});
+  }
+
+  handleAddSearchCondRelation = (index, relation) => {
+    let search = this.state.search;
+    let elem = search[index]
+    if (elem) {
+      elem.relation = relation;
+    } else {
+      elem = {relation};
+    }
+    search[index] = elem;
+    this.setState({search});
+  }
+
+  handleAddSearchCondValue = (index, value) => {
+    let search = this.state.search;
+    let elem = search[index]
+    if (elem) {
+      elem.value = value;
+    } else {
+      elem = {value};
+    }
+    search[index] = elem;
+    this.setState({search});
+  }
+
   render() {
     const { list } = this.props.student;
     const { getFieldDecorator } = this.props.form;
@@ -466,20 +506,20 @@ class List extends React.Component {
       return (
         <Row key={i} type="flex" justify="center" className={style.searchcss}>
           <Col span={3} style={{ width: 120 }}>
-            <Select defaultValue="and" style={{ width: 75 }}>
+            <Select defaultValue="and" style={{ width: 75 }} onChange={(v)=>{this.handleAddSearchCondRelation(i, v)}}>
               <Option value="and">并且</Option>
               <Option value="or">或者</Option>
             </Select>
           </Col>
           <Col span={4} style={{ width: 120 }}>
-            <Select defaultValue="card" style={{ width: 100 }}>
+            <Select defaultValue="card" style={{ width: 100 }} onChange={(v)=>{this.handleAddSearchCondName(i, v)}}>
               <Option value="card">学号</Option>
               <Option value="name">姓名</Option>
               <Option value="science">系别</Option>
             </Select>
           </Col>
           <Col span={8} style={{ width: 500 }}>
-            <Input />
+            <Input onChange={(v)=>{this.handleAddSearchCondValue(i, v)}}/>
           </Col>
         </Row>
       );
@@ -528,14 +568,14 @@ class List extends React.Component {
             </Button>
           </Col>
           <Col span={4} style={{ width: 120 }}>
-            <Select defaultValue="card" style={{ width: 100 }}>
+            <Select defaultValue="card" style={{ width: 100 }} onChange={(v)=>{this.handleAddSearchCondName(0, v)}}>
               <Option value="card">学号</Option>
               <Option value="name">姓名</Option>
               <Option value="science">系别</Option>
             </Select>
           </Col>
           <Col span={8} style={{ width: 500 }} >
-            <Input />
+            <Input onChange={(v)=>{this.handleAddSearchCondValue(0, v)}}/>
           </Col>
         </Row>
         <div>
